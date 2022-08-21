@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const formModel = new Schema(
     {
+        view: {
+            type: String,
+            required: true,
+        },
         name: {
             type: String,
             required: true,
