@@ -2,6 +2,8 @@ const Form = require("../../models/form_model");
 const Field = require("../../models/field_model");
 
 const createForm = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
     const form_data = req.body;
 
     const newForm = new Form(form_data);
@@ -19,8 +21,26 @@ const createForm = (req, res) => {
         });
 }
 
+const allForms = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    Form.find()
+        .then((forms) => {
+            res.status(200).send(forms);
+        })
+        .catch((error) => {
+            const callback = {
+                message: "Error to fetch forms",
+                error
+            };
+            res.status(200).send(callback);
+        });
+}
+
 const showForm = (req, res) => {
-    const form_id = req.params.form_id;
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const {form_id} = req.params;
 
     Form.findById(form_id)
         .then((formResult) => {
@@ -51,5 +71,6 @@ const showForm = (req, res) => {
 
 module.exports = {
     createForm,
+    allForms,
     showForm,
 }
