@@ -32,7 +32,8 @@ import {
 
 import {
     Close,
-    Delete, Edit,
+    Delete,
+    Edit,
     MoreVert,
 } from "@mui/icons-material";
 
@@ -61,6 +62,7 @@ const FormPage = () => {
     const [deleteFormDialogOpen, setDeleteFormDialogOpen] = useState(false);
 
     const [updatingField, setUpdatingField] = useState('');
+    const [updatingID, setUpdatingID] = useState('');
 
     const [actionMenu, setActionMenu] = useState(true);
 
@@ -75,8 +77,6 @@ const FormPage = () => {
     const [fields, setFields] = useState('');
 
     const readyToUpdate = (field) => {
-        setUpdatingField(field);
-
         setViewName(field.view);
         setDatabaseName(field.name);
         setDefValue(field.default);
@@ -84,6 +84,7 @@ const FormPage = () => {
         setIsRequired(field.required);
         setIsUnique(field.unique);
 
+        setUpdatingID(field._id);
         setUpdatingField(true);
         setFieldDialog(true);
     }
@@ -132,7 +133,20 @@ const FormPage = () => {
     }
 
     const updateField = () => {
-        Axios.patch(`http://localhost:8000/api/field/update`, {})
+        const updateData = {
+            field_id: updatingID,
+            update_data: {
+                view: viewName,
+                name: databaseName,
+                type: datatype,
+                required: isRequired,
+                unique: isUnique,
+                default: defValue,
+                form: form_id,
+            },
+        };
+
+        Axios.put(`http://localhost:8000/api/field/update`, updateData)
             .then((result) => {
                 setViewName('');
                 setDatabaseName('');
@@ -164,7 +178,7 @@ const FormPage = () => {
 
     return (
         <Box>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <Box sx={{ display: 'flex' }}>
                 <Typography
                     variant="h4"
                     color="primary"
@@ -230,15 +244,6 @@ const FormPage = () => {
                                             <Avatar
                                                 sx={{bgcolor: "primary.main"}}>{field.type[0].toUpperCase()}</Avatar>
                                         }
-                                        // action={
-                                        //     <Box>
-                                        //         <IconButton
-                                        //             onClick={() => setActionMenu(!actionMenu)}
-                                        //         >
-                                        //             {actionMenu ? <Close/> : <MoreVert/>}
-                                        //         </IconButton>
-                                        //     </Box>
-                                        // }
                                         sx={{ borderBottom: "solid 1px", borderBottomColor: "divider" }}
                                     />
                                     <CardContent>
