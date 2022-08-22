@@ -41,7 +41,29 @@ const deleteField = (req, res) => {
         })
 }
 
+const updateField = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const {field_id, update_data} = req.body;
+
+    Field.findByIdAndUpdate(field_id, update_data)
+        .then((result) => {
+            const callback = {
+                message: "Field updated",
+            };
+            res.status(200).send(callback);
+        })
+        .catch((error) => {
+            const callback = {
+                message: "Failed to update",
+                error,
+            };
+            res.status(500).send(callback);
+        })
+}
+
 module.exports = {
     createField,
     deleteField,
+    updateField,
 }
