@@ -20,6 +20,28 @@ const createField = (req, res) => {
         });
 }
 
+const deleteField = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const {field_id} = req.params;
+
+    Field.findByIdAndDelete(field_id)
+        .then((result) => {
+            const callback = {
+                message: "Field deleted",
+            };
+            res.status(200).send(callback);
+        })
+        .catch((error) => {
+            const callback = {
+                message: "Failed to delete",
+                error,
+            };
+            res.status(500).send(callback);
+        })
+}
+
 module.exports = {
     createField,
+    deleteField,
 }
