@@ -19,6 +19,7 @@ import {
     FormControlLabel,
     Checkbox,
     InputLabel,
+    Menu,
     MenuItem,
     FormControl,
     Select,
@@ -26,10 +27,13 @@ import {
     CircularProgress,
     Avatar,
     DialogContentText,
+    CardActions,
 } from "@mui/material";
 
 import {
-    Delete
+    Close,
+    Delete, Edit,
+    MoreVert,
 } from "@mui/icons-material";
 
 import Axios from "axios";
@@ -53,8 +57,12 @@ const FormPage = () => {
     const history = useHistory();
     const {form_id} = useParams();
 
-    const [addFieldDialogOpen, setAddFieldDialogOpen] = useState(false);
+    const [fieldDialog, setFieldDialog] = useState(false);
     const [deleteFormDialogOpen, setDeleteFormDialogOpen] = useState(false);
+
+    const [updatingField, setUpdatingField] = useState('');
+
+    const [actionMenu, setActionMenu] = useState(true);
 
     const [viewName, setViewName] = useState('');
     const [databaseName, setDatabaseName] = useState('');
@@ -65,6 +73,32 @@ const FormPage = () => {
 
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
+
+    const readyToUpdate = (field) => {
+        setUpdatingField(field);
+
+        setViewName(field.view);
+        setDatabaseName(field.name);
+        setDefValue(field.default);
+        setDatatype(field.type);
+        setIsRequired(field.required);
+        setIsUnique(field.unique);
+
+        setUpdatingField(true);
+        setFieldDialog(true);
+    }
+
+    const closeFieldDialog = () => {
+        setViewName('');
+        setDatabaseName('');
+        setDefValue('');
+        setDatatype('string');
+        setIsRequired(false);
+        setIsUnique(false);
+
+        setUpdatingField(false);
+        setFieldDialog(false);
+    }
 
     const addField = () => {
         const sendData = {
@@ -86,7 +120,7 @@ const FormPage = () => {
                 setIsRequired(false);
                 setIsUnique(false);
 
-                setAddFieldDialogOpen(false);
+                setFieldDialog(false);
             })
             .catch((error) => console.log(error));
     }
@@ -97,9 +131,25 @@ const FormPage = () => {
             .catch((error) => console.log(error));
     }
 
+    const updateField = () => {
+        Axios.patch(`http://localhost:8000/api/field/update`, {})
+            .then((result) => {
+                setViewName('');
+                setDatabaseName('');
+                setDefValue('');
+                setDatatype('string');
+                setIsRequired(false);
+                setIsUnique(false);
+
+                setFieldDialog(false);
+            })
+            .catch((error) => console.log(error));
+    }
+
     const deleteField = (field_id) => {
         Axios.delete(`http://localhost:8000/api/field/delete/${field_id}`)
-            .then((result) => {})
+            .then((result) => {
+            })
             .catch((error) => console.log(error));
     }
 
@@ -114,7 +164,7 @@ const FormPage = () => {
 
     return (
         <Box>
-            <Toolbar>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
                 <Typography
                     variant="h4"
                     color="primary"
@@ -128,7 +178,7 @@ const FormPage = () => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => setAddFieldDialogOpen(true)}
+                    onClick={() => setFieldDialog(true)}
                     disableElevation
                 >
                     Add a new field
@@ -142,25 +192,26 @@ const FormPage = () => {
                 >
                     Delete form
                 </Button>
-            </Toolbar>
+            </Box>
+            <br/>
             <Divider sx={{borderColor: "primary.main"}}/>
-            <br />
+            <br/>
             <Grid
                 spacing={3}
                 container
             >
                 {
                     fields === ''
-                    ?
+                        ?
                         <Box
                             sx={{
                                 textAlign: "center",
                                 p: 5,
                             }}
                         >
-                            <CircularProgress />
+                            <CircularProgress/>
                         </Box>
-                    :
+                        :
                         fields.map((field) => (
                             <Grid
                                 Key={field}
@@ -174,20 +225,46 @@ const FormPage = () => {
                                 >
                                     <CardHeader
                                         title={field.view}
+                                        subheader={field.name}
                                         avatar={
-                                            <Avatar sx={{ bgcolor: "primary.main" }}>{field.type[0].toUpperCase()}</Avatar>
+                                            <Avatar
+                                                sx={{bgcolor: "primary.main"}}>{field.type[0].toUpperCase()}</Avatar>
                                         }
-                                        action={
-                                            <IconButton
-                                                onClick={() => deleteField(field._id)}
-                                            >
-                                                <Delete color="error" />
-                                            </IconButton>
-                                        }
+                                        // action={
+                                        //     <Box>
+                                        //         <IconButton
+                                        //             onClick={() => setActionMenu(!actionMenu)}
+                                        //         >
+                                        //             {actionMenu ? <Close/> : <MoreVert/>}
+                                        //         </IconButton>
+                                        //     </Box>
+                                        // }
+                                        sx={{ borderBottom: "solid 1px", borderBottomColor: "divider" }}
                                     />
                                     <CardContent>
-
+                                        <Typography gutterBottom>
+                                            {field.unique ? "✅" : "❌"}
+                                            &nbsp;
+                                            Unique
+                                        </Typography>
+                                        <Typography gutterBottom>
+                                            {field.required ? "✅" : "❌"}
+                                            &nbsp;
+                                            Required
+                                        </Typography>
                                     </CardContent>
+                                    {
+                                        actionMenu
+                                        &&
+                                        <CardActions sx={{ borderTop: "solid 1px", borderTopColor: "divider" }}>
+                                            <IconButton onClick={() => deleteField(field._id)}>
+                                                <Delete color="error"/>
+                                            </IconButton>
+                                            <IconButton onClick={() => readyToUpdate(field)}>
+                                                <Edit color="info"/>
+                                            </IconButton>
+                                        </CardActions>
+                                    }
                                 </Card>
                             </Grid>
                         ))
@@ -195,8 +272,8 @@ const FormPage = () => {
             </Grid>
 
             <Dialog
-                open={addFieldDialogOpen}
-                onClose={() => setAddFieldDialogOpen(false)}
+                open={fieldDialog}
+                onClose={() => closeFieldDialog()}
                 maxWidth="xs"
                 fullWidth
             >
@@ -278,10 +355,10 @@ const FormPage = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => addField()}
+                        onClick={() => updatingField ? updateField() : addField()}
                         disableElevation
                     >
-                        Create field
+                        { updatingField ? 'Update field' : 'Create field' }
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -296,7 +373,8 @@ const FormPage = () => {
                     <Typography variant="h6" color="error.main">Sure to delete?</Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Are sure that you want to delete this form? There is no way to restore form again.</DialogContentText>
+                    <DialogContentText>Are sure that you want to delete this form? There is no way to restore form
+                        again.</DialogContentText>
                 </DialogContent>
                 <DialogActions sx={{p: 3}}>
                     <Button
