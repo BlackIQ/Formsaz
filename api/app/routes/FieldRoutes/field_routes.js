@@ -5,5 +5,6 @@ const controllers = require("../../controllers/FieldControllers/field_controller
 const router = express.Router();
 
 router.post('/create', controllers.createField);
+router.delete('/delete/:field_id', controllers.deleteField);
 
 module.exports = router;
