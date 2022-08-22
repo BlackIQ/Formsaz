@@ -44,7 +44,7 @@ const showForm = (req, res) => {
 
     Form.findById(form_id)
         .then((formResult) => {
-            Field.findOne({ form: formResult.id })
+            Field.find({ form: form_id })
                 .then((fieldResult) => {
                     const callback = {
                         form: formResult,
