@@ -97,6 +97,12 @@ const FormPage = () => {
             .catch((error) => console.log(error));
     }
 
+    const deleteField = (field_id) => {
+        Axios.delete(`http://localhost:8000/api/field/delete/${field_id}`)
+            .then((result) => {})
+            .catch((error) => console.log(error));
+    }
+
     useEffect(() => {
         Axios.get(`http://localhost:8000/api/form/get/${form_id}`)
             .then((result) => {
@@ -172,12 +178,16 @@ const FormPage = () => {
                                             <Avatar sx={{ bgcolor: "primary.main" }}>{field.type[0].toUpperCase()}</Avatar>
                                         }
                                         action={
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() => deleteField(field._id)}
+                                            >
                                                 <Delete color="error" />
                                             </IconButton>
                                         }
                                     />
-                                    <CardContent></CardContent>
+                                    <CardContent>
+
+                                    </CardContent>
                                 </Card>
                             </Grid>
                         ))
