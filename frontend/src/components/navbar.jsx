@@ -34,9 +34,13 @@ const Navbar = () => {
 
         Axios.post("http://localhost:8000/api/form/create", sendData)
             .then((result) => {
+                const form_id = result.data.form._id;
+
                 setViewName('');
                 setDatabaseName('');
                 setAddFormDialogOpen(false);
+
+                history.push(`/form/${form_id}`);
             })
             .catch((error) => {
                 console.log(error);
