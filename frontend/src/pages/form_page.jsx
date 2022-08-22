@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useHistory} from "react-router-dom";
 
 import {
     Box,
@@ -21,7 +21,11 @@ import {
     InputLabel,
     MenuItem,
     FormControl,
-    Select, IconButton, CircularProgress, Avatar,
+    Select,
+    IconButton,
+    CircularProgress,
+    Avatar,
+    DialogContentText,
 } from "@mui/material";
 
 import {
@@ -46,9 +50,11 @@ const datatypes = [
 ];
 
 const FormPage = () => {
+    const history = useHistory();
     const {form_id} = useParams();
 
     const [addFieldDialogOpen, setAddFieldDialogOpen] = useState(false);
+    const [deleteFormDialogOpen, setDeleteFormDialogOpen] = useState(false);
 
     const [viewName, setViewName] = useState('');
     const [databaseName, setDatabaseName] = useState('');
@@ -85,7 +91,11 @@ const FormPage = () => {
             .catch((error) => console.log(error));
     }
 
-    console.log(fields)
+    const deleteForm = () => {
+        Axios.delete(`http://localhost:8000/api/form/delete/${form_id}`)
+            .then((result) => history.push("/"))
+            .catch((error) => console.log(error));
+    }
 
     useEffect(() => {
         Axios.get(`http://localhost:8000/api/form/get/${form_id}`)
@@ -116,6 +126,15 @@ const FormPage = () => {
                     disableElevation
                 >
                     Add a new field
+                </Button>
+                &nbsp;
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => setDeleteFormDialogOpen(true)}
+                    disableElevation
+                >
+                    Delete form
                 </Button>
             </Toolbar>
             <Divider sx={{borderColor: "primary.main"}}/>
@@ -253,6 +272,30 @@ const FormPage = () => {
                         disableElevation
                     >
                         Create field
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={deleteFormDialogOpen}
+                onClose={() => setDeleteFormDialogOpen(false)}
+                maxWidth="xs"
+                fullWidth
+            >
+                <DialogTitle>
+                    <Typography variant="h6" color="error.main">Sure to delete?</Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Are sure that you want to delete this form? There is no way to restore form again.</DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{p: 3}}>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => deleteForm()}
+                        disableElevation
+                    >
+                        Delete form
                     </Button>
                 </DialogActions>
             </Dialog>
