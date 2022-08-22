@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 
 import {
     Box,
+    Grid,
     Typography,
     Toolbar,
     TextField,
@@ -10,6 +11,9 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Card,
+    CardHeader,
+    CardContent,
     Divider,
     Button,
     FormControlLabel,
@@ -17,8 +21,12 @@ import {
     InputLabel,
     MenuItem,
     FormControl,
-    Select,
+    Select, IconButton, CircularProgress, Avatar,
 } from "@mui/material";
+
+import {
+    Delete
+} from "@mui/icons-material";
 
 import Axios from "axios";
 
@@ -65,10 +73,19 @@ const FormPage = () => {
 
         Axios.post("http://localhost:8000/api/field/create", sendData)
             .then((result) => {
-                console.log(result.data);
+                setViewName('');
+                setDatabaseName('');
+                setDefValue('');
+                setDatatype('string');
+                setIsRequired(false);
+                setIsUnique(false);
+
+                setAddFieldDialogOpen(false);
             })
             .catch((error) => console.log(error));
     }
+
+    console.log(fields)
 
     useEffect(() => {
         Axios.get(`http://localhost:8000/api/form/get/${form_id}`)
@@ -102,6 +119,51 @@ const FormPage = () => {
                 </Button>
             </Toolbar>
             <Divider sx={{borderColor: "primary.main"}}/>
+            <br />
+            <Grid
+                spacing={3}
+                container
+            >
+                {
+                    fields === ''
+                    ?
+                        <Box
+                            sx={{
+                                textAlign: "center",
+                                p: 5,
+                            }}
+                        >
+                            <CircularProgress />
+                        </Box>
+                    :
+                        fields.map((field) => (
+                            <Grid
+                                Key={field}
+                                md={4}
+                                sm={6}
+                                xs={6}
+                                item
+                            >
+                                <Card
+                                    variant="outlined"
+                                >
+                                    <CardHeader
+                                        title={field.view}
+                                        avatar={
+                                            <Avatar sx={{ bgcolor: "primary.main" }}>{field.type[0].toUpperCase()}</Avatar>
+                                        }
+                                        action={
+                                            <IconButton>
+                                                <Delete color="error" />
+                                            </IconButton>
+                                        }
+                                    />
+                                    <CardContent></CardContent>
+                                </Card>
+                            </Grid>
+                        ))
+                }
+            </Grid>
 
             <Dialog
                 open={addFieldDialogOpen}
