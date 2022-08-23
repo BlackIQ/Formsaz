@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import {useForm} from "react-hook-form";
 import {useParams, useHistory} from "react-router-dom";
 
 import {
@@ -36,6 +37,20 @@ const ShowPage = () => {
     const history = useHistory();
     const {form_id} = useParams();
 
+    const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const submit = (data) => {
+        const sendData = {
+            ...data,
+            "form": form_id,
+        };
+
+        Axios.post("http://localhost:8000/api/test/insert", data)
+            .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => console.log(error));
+    }
+
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
@@ -63,38 +78,78 @@ const ShowPage = () => {
             >
                 {
                     fields !== ''
-                    ?
-                    fields.map((field) => (
-                        <Grid
-                            Key={field._id}
-                            md={3}
-                            xs={6}
-                            sm={6}
-                            item
+                        ?
+                        fields.map((field) => (
+                            <Grid
+                                Key={field._id}
+                                md={3}
+                                xs={6}
+                                sm={6}
+                                item
+                            >
+                                {
+                                    field.type === "string"
+                                    &&
+                                    <TextField
+                                        variant="outlined"
+                                        label={field.view}
+                                        placeholder={field.default}
+                                        {...register(field.name)}
+                                        type="string"
+                                        fullWidth
+                                    />
+                                }
+                                {
+                                    field.type === "number"
+                                    &&
+                                    <TextField
+                                        variant="outlined"
+                                        label={field.view}
+                                        placeholder={field.default}
+                                        {...register(field.name)}
+                                        type="number"
+                                        fullWidth
+                                    />
+                                }
+                                {
+                                    field.type === "boolean"
+                                    &&
+                                    <FormControl fullWidth>
+                                        <InputLabel>{field.view}</InputLabel>
+                                        <Select
+                                            variant="outlined"
+                                            placeholder={field.default}
+                                            label={field.view}
+                                            {...register(field.name)}
+                                        >
+                                            <MenuItem value="true">
+                                                True
+                                            </MenuItem>
+                                            <MenuItem value="false">
+                                                False
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                }
+                            </Grid>
+                        ))
+                        :
+                        <Box
+                            sx={{
+                                textAlign: "center",
+                                p: 5,
+                            }}
                         >
-                            <TextField
-                                label={field.view}
-                                placeholder={field.default}
-                                fullWidth
-                            />
-                        </Grid>
-                    ))
-                    :
-                    <Box
-                        sx={{
-                            textAlign: "center",
-                            p: 5,
-                        }}
-                    >
-                        <CircularProgress/>
-                    </Box>
+                            <CircularProgress/>
+                        </Box>
                 }
             </Grid>
-            <br />
+            <br/>
             <Button
                 variant="contained"
                 color="primary"
                 size="large"
+                onClick={handleSubmit(submit)}
                 disableElevation
             >
                 Insert
