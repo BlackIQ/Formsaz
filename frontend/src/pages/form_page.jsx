@@ -206,6 +206,15 @@ const FormPage = () => {
                 >
                     Delete form
                 </Button>
+                &nbsp;
+                <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={() => history.push(`/show/${form_id}`)}
+                    disableElevation
+                >
+                    Show form
+                </Button>
             </Box>
             <br/>
             <Divider sx={{borderColor: "primary.main"}}/>
