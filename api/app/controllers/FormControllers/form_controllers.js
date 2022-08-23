@@ -38,7 +38,7 @@ const allForms = (req, res) => {
 }
 
 const showForm = (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "*");
 
     const {form_id} = req.params;
 
