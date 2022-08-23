@@ -29,7 +29,6 @@ const createItem = (field) => {
 }
 
 const createModel = (fields) => {
-    const {name} = fields;
     const Schema = mongoose.Schema;
 
     const testModel = new Schema(
