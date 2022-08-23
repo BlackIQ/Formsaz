@@ -62,6 +62,8 @@ const ShowPage = () => {
                 container
             >
                 {
+                    fields !== ''
+                    ?
                     fields.map((field) => (
                         <Grid
                             Key={field._id}
@@ -77,6 +79,15 @@ const ShowPage = () => {
                             />
                         </Grid>
                     ))
+                    :
+                    <Box
+                        sx={{
+                            textAlign: "center",
+                            p: 5,
+                        }}
+                    >
+                        <CircularProgress/>
+                    </Box>
                 }
             </Grid>
             <br />
