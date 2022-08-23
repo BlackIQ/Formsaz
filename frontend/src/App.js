@@ -16,6 +16,7 @@ import Navbar from "./components/navbar";
 
 import HomePage from "./pages/home_page";
 import FormPage from "./pages/form_page";
+import ShowPage from "./pages/show_page";
 
 function App() {
     const theme = createTheme({
@@ -39,6 +40,7 @@ function App() {
                     <Switch>
                         <Route path="/" exact><HomePage /></Route>
                         <Route path="/form/:form_id" exact><FormPage /></Route>
+                        <Route path="/show/:form_id" exact><ShowPage /></Route>
                     </Switch>
                 </Container>
             </Router>
