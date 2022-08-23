@@ -1,4 +1,5 @@
 const Field = require("../../models/field_model");
+const Test = require("../../models/test_model");
 
 const createField = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -62,8 +63,24 @@ const updateField = (req, res) => {
         })
 }
 
+const testModel = (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const test = new Test(
+        {
+            name: "Amir",
+        }
+    );
+
+    test.save()
+        .then((result) => res.send(result))
+        .catch((error) => res.send(error));
+}
+
 module.exports = {
     createField,
     deleteField,
     updateField,
+
+    testModel,
 }
