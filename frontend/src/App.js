@@ -21,6 +21,7 @@ import ShowPage from "./pages/show_page";
 function App() {
     const theme = createTheme({
         palette: {
+            mode: "dark",
             primary: {
                 main: Colors.indigo[900],
             },
