@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+const Form = require("../models/form_model");
+const Field = require("../models/field_model");
+
 const data_type = [
     {
         db_type: "string",
@@ -15,34 +18,55 @@ const data_type = [
     },
 ];
 
-const returnModelType = (db_type) => {
+const modelType = (db_type) => {
     return data_type.filter(type => type.db_type === db_type)[0].model_type;
 }
 
-const createItem = (field) => {
-    return {
-        type: returnModelType(field.type),
-        required: field.required,
-        unique: field.unique,
-        default: field.default,
-    };
-}
+class ModelCreator {
+    constructor(form_id) {
+        this.form_id = form_id;
+    }
 
-const createModel = (fields) => {
-    const Schema = mongoose.Schema;
+    createField = () => {
+        return Field.find({form: this.form_id})
+            .then((fieldResult) => fieldResult)
+            .catch((error) => error);
+    }
 
-    const testModel = new Schema(
-        fields.map((field) => ({
-            name: createItem(field),
-        })),
-        {
-            timestamps: true,
-        },
-    );
+    modelType = (db_type) => {
+        return data_type.filter(type => type.db_type === db_type)[0].model_type;
+    }
 
-    return mongoose.model('test', testModel);
+    createModel = () => {
+        return Form.findById(this.form_id)
+            .then((result) => {
+                const Schema = mongoose.Schema;
+
+                const generatedMode = new Schema(
+                    // fields.map((field) => ({
+                    //     name: createItem(field),
+                    // })),
+                    {
+                        name: {
+                            type: this.modelType("string"),
+                            default: "",
+                            required: true,
+                        },
+                    },
+                    {
+                        timestamps: true,
+                    },
+                );
+
+                return mongoose.model(result.name, generatedMode);
+            })
+            .catch((error) => {
+                return error;
+            });
+    }
 }
 
 module.exports = {
-    createModel,
+    ModelCreator,
+    data_type,
 }
