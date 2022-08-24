@@ -1,9 +1,9 @@
 import {FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
-import {useForm} from "react-hook-form";
+
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 const CreateField = (props) => {
-    const field = props.field;
-    const register = props.register;
+    const {field, register} = props;
 
     return (
         field.type === "string"
