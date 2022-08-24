@@ -15,13 +15,15 @@ import {
 
 import Axios from "axios";
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
 const HomePage = () => {
     const history = useHistory();
 
     const [forms, setForms] = useState('');
 
     useEffect(() => {
-        Axios.get("http://localhost:8000/api/form/all")
+        Axios.get(`${baseUrl}/api/form/all`)
             .then((result) => setForms(result.data))
             .catch((error) => console.log(error));
     }, [forms]);
