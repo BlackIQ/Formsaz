@@ -18,6 +18,8 @@ import {
 
 import Axios from "axios";
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
 const Navbar = () => {
     const history = useHistory();
 
@@ -32,7 +34,7 @@ const Navbar = () => {
             name: databaseName,
         };
 
-        Axios.post("http://localhost:8000/api/form/create", sendData)
+        Axios.post(`${baseUrl}/api/form/create`, sendData)
             .then((result) => {
                 const form_id = result.data.form._id;
 
