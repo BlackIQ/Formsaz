@@ -23,16 +23,16 @@ const ShowPage = () => {
     const submit = (data) => {
         const sendData = {
             ...data,
-            "form": form_id,
+            form_id,
         };
 
         console.log(sendData)
 
-        // Axios.post(`${baseUrl}/api/test/insert`, data)
-        // .then((result) => {
-        //     console.log(result.data);
-        // })
-        // .catch((error) => console.log(error));
+        Axios.post(`${baseUrl}/api/test/insert`, data)
+        .then((result) => {
+            console.log(result.data);
+        })
+        .catch((error) => console.log(error));
     }
 
     const test = () => {
@@ -50,11 +50,20 @@ const ShowPage = () => {
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
+    const [dataMongo, setDataMongo] = useState('');
+
     useEffect(() => {
         Axios.get(`${baseUrl}/api/form/get/${form_id}`)
             .then((result) => {
                 setForm(result.data.form);
                 setFields(result.data.fields);
+            })
+            .catch((error) => console.log(error));
+
+        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
+            .then((result) => {
+                // setDataMongo(result.data);
+                console.log(result.data);
             })
             .catch((error) => console.log(error));
     }, [form, form_id]);
