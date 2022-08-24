@@ -1,5 +1,4 @@
 const Field = require("../../models/field_model");
-const Test = require("../../models/test_model");
 
 const createField = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
