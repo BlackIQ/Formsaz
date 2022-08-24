@@ -5,7 +5,6 @@ import {
     Box,
     Grid,
     Typography,
-    Toolbar,
     TextField,
     Dialog,
     DialogTitle,
@@ -19,7 +18,6 @@ import {
     FormControlLabel,
     Checkbox,
     InputLabel,
-    Menu,
     MenuItem,
     FormControl,
     Select,
@@ -31,10 +29,8 @@ import {
 } from "@mui/material";
 
 import {
-    Close,
     Delete,
     Edit,
-    MoreVert,
 } from "@mui/icons-material";
 
 import Axios from "axios";
@@ -54,6 +50,8 @@ const datatypes = [
     }
 ];
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
 const FormPage = () => {
     const history = useHistory();
     const {form_id} = useParams();
@@ -63,8 +61,6 @@ const FormPage = () => {
 
     const [updatingField, setUpdatingField] = useState('');
     const [updatingID, setUpdatingID] = useState('');
-
-    const [actionMenu, setActionMenu] = useState(true);
 
     const [viewName, setViewName] = useState('');
     const [databaseName, setDatabaseName] = useState('');
@@ -112,7 +108,7 @@ const FormPage = () => {
             form: form_id,
         };
 
-        Axios.post("http://localhost:8000/api/field/create", sendData)
+        Axios.post(`${baseUrl}/api/field/create`, sendData)
             .then((result) => {
                 setViewName('');
                 setDatabaseName('');
@@ -127,7 +123,7 @@ const FormPage = () => {
     }
 
     const deleteForm = () => {
-        Axios.delete(`http://localhost:8000/api/form/delete/${form_id}`)
+        Axios.delete(`${baseUrl}/api/form/delete/${form_id}`)
             .then((result) => history.push("/"))
             .catch((error) => console.log(error));
     }
@@ -146,7 +142,7 @@ const FormPage = () => {
             },
         };
 
-        Axios.put(`http://localhost:8000/api/field/update`, updateData)
+        Axios.put(`${baseUrl}/api/field/update`, updateData)
             .then((result) => {
                 setViewName('');
                 setDatabaseName('');
@@ -161,24 +157,24 @@ const FormPage = () => {
     }
 
     const deleteField = (field_id) => {
-        Axios.delete(`http://localhost:8000/api/field/delete/${field_id}`)
+        Axios.delete(`${baseUrl}/api/field/delete/${field_id}`)
             .then((result) => {
             })
             .catch((error) => console.log(error));
     }
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/api/form/get/${form_id}`)
+        Axios.get(`${baseUrl}/api/form/get/${form_id}`)
             .then((result) => {
                 setForm(result.data.form);
                 setFields(result.data.fields);
             })
             .catch((error) => console.log(error));
-    }, [form]);
+    }, [form, form_id]);
 
     return (
         <Box>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{display: 'flex'}}>
                 <Typography
                     variant="h4"
                     color="primary"
@@ -236,24 +232,17 @@ const FormPage = () => {
                         </Box>
                         :
                         fields.map((field) => (
-                            <Grid
-                                Key={field}
-                                md={4}
-                                sm={6}
-                                xs={6}
-                                item
-                            >
-                                <Card
-                                    variant="outlined"
-                                >
+                            <Grid Key={field} md={4} sm={6} xs={6} item>
+                                <Card variant="outlined">
                                     <CardHeader
                                         title={field.view}
                                         subheader={field.name}
                                         avatar={
                                             <Avatar
-                                                sx={{bgcolor: "primary.main"}}>{field.type[0].toUpperCase()}</Avatar>
+                                                sx={{bgcolor: "primary.main"}}>{field.type[0].toUpperCase()}
+                                            </Avatar>
                                         }
-                                        sx={{ borderBottom: "solid 1px", borderBottomColor: "divider" }}
+                                        sx={{borderBottom: "solid 1px", borderBottomColor: "divider"}}
                                     />
                                     <CardContent>
                                         <Typography gutterBottom>
@@ -267,18 +256,14 @@ const FormPage = () => {
                                             Required
                                         </Typography>
                                     </CardContent>
-                                    {
-                                        actionMenu
-                                        &&
-                                        <CardActions sx={{ borderTop: "solid 1px", borderTopColor: "divider" }}>
-                                            <IconButton onClick={() => deleteField(field._id)}>
-                                                <Delete color="error"/>
-                                            </IconButton>
-                                            <IconButton onClick={() => readyToUpdate(field)}>
-                                                <Edit color="info"/>
-                                            </IconButton>
-                                        </CardActions>
-                                    }
+                                    <CardActions sx={{borderTop: "solid 1px", borderTopColor: "divider"}}>
+                                        <IconButton onClick={() => deleteField(field._id)}>
+                                            <Delete color="error"/>
+                                        </IconButton>
+                                        <IconButton onClick={() => readyToUpdate(field)}>
+                                            <Edit color="info"/>
+                                        </IconButton>
+                                    </CardActions>
                                 </Card>
                             </Grid>
                         ))
@@ -372,7 +357,7 @@ const FormPage = () => {
                         onClick={() => updatingField ? updateField() : addField()}
                         disableElevation
                     >
-                        { updatingField ? 'Update field' : 'Create field' }
+                        {updatingField ? 'Update field' : 'Create field'}
                     </Button>
                 </DialogActions>
             </Dialog>
