@@ -1,41 +1,22 @@
 import {useState, useEffect} from "react";
 import {useForm} from "react-hook-form";
-import {useParams, useHistory} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 import {
     Box,
     Grid,
     Typography,
-    Toolbar,
-    TextField,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Card,
-    CardHeader,
-    CardContent,
     Divider,
     Button,
-    FormControlLabel,
-    Checkbox,
-    InputLabel,
-    Menu,
-    MenuItem,
-    FormControl,
-    Select,
-    IconButton,
     CircularProgress,
-    Avatar,
-    DialogContentText,
-    CardActions,
 } from "@mui/material";
 
 import Axios from "axios";
 import CreateField from "../components/field_creator";
 
+const baseUrl = process.env.REACT_APP_BACKEND_URL;
+
 const ShowPage = () => {
-    const history = useHistory();
     const {form_id} = useParams();
 
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
@@ -47,24 +28,36 @@ const ShowPage = () => {
 
         console.log(sendData)
 
-        // Axios.post("http://localhost:8000/api/test/insert", data)
+        // Axios.post(`${baseUrl}/api/test/insert`, data)
         // .then((result) => {
         //     console.log(result.data);
         // })
         // .catch((error) => console.log(error));
     }
 
+    const test = () => {
+        const data = {
+            form_id,
+        };
+
+        Axios.post(`${baseUrl}/api/test/test`, data)
+            .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => console.log(error));
+    }
+
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
     useEffect(() => {
-        Axios.get(`http://localhost:8000/api/form/get/${form_id}`)
+        Axios.get(`${baseUrl}/api/form/get/${form_id}`)
             .then((result) => {
                 setForm(result.data.form);
                 setFields(result.data.fields);
             })
             .catch((error) => console.log(error));
-    }, [form]);
+    }, [form, form_id]);
 
     return (
         <Box>
@@ -107,6 +100,16 @@ const ShowPage = () => {
                 disableElevation
             >
                 Insert
+            </Button>
+            &nbsp;
+            <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={() => test()}
+                disableElevation
+            >
+                Test
             </Button>
             <br/>
             <br/>
