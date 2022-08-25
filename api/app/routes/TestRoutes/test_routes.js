@@ -5,7 +5,7 @@ const controllers = require("../../controllers/TestControllers/test_controller")
 const router = express.Router();
 
 router.post('/test', controllers.test);
-router.get('/read', controllers.read);
+router.get('/read/:form_id', controllers.read);
 router.post('/insert', controllers.read);
 
 module.exports = router;
