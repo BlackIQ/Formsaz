@@ -66,7 +66,7 @@ const ShowPage = () => {
                 console.log(result.data);
             })
             .catch((error) => console.log(error));
-    }, [form, form_id]);
+    }, []);
 
     return (
         <Box>
