@@ -20,19 +20,20 @@ const ShowPage = () => {
     const {form_id} = useParams();
 
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
+
     const submit = (data) => {
         const sendData = {
-            ...data,
+            data,
             form_id,
         };
 
-        console.log(sendData)
+        console.log(sendData);
 
-        Axios.post(`${baseUrl}/api/test/insert`, data)
-        .then((result) => {
-            console.log(result.data);
-        })
-        .catch((error) => console.log(error));
+        Axios.post(`${baseUrl}/api/test/insert`, sendData)
+            .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => console.log(error));
     }
 
     const test = () => {
@@ -42,6 +43,15 @@ const ShowPage = () => {
 
         Axios.post(`${baseUrl}/api/test/test`, data)
             .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => console.log(error));
+    }
+
+    const read = () => {
+        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
+            .then((result) => {
+                // setDataMongo(result.data);
                 console.log(result.data);
             })
             .catch((error) => console.log(error));
@@ -57,13 +67,6 @@ const ShowPage = () => {
             .then((result) => {
                 setForm(result.data.form);
                 setFields(result.data.fields);
-            })
-            .catch((error) => console.log(error));
-
-        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
-            .then((result) => {
-                // setDataMongo(result.data);
-                console.log(result.data);
             })
             .catch((error) => console.log(error));
     }, []);
@@ -118,7 +121,17 @@ const ShowPage = () => {
                 onClick={() => test()}
                 disableElevation
             >
-                Test
+                Test Exist ion
+            </Button>
+            &nbsp;
+            <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={() => read()}
+                disableElevation
+            >
+                Test Read
             </Button>
             <br/>
             <br/>
