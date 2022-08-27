@@ -12,30 +12,40 @@ const test = (req, res) => {
         .then((form_result) => {
             Field.find({form: form_result._id})
                 .then((fields_result) => {
+                    if (!mongoose.models[form_result.name]) {
+                        let stuff = {};
+                        let newData = {};
 
-                    let stuff = {};
+                        fields_result.map((field) => {
+                            stuff[field.name] = {
+                                type: modelType(field.type),
+                                default: field.default,
+                                required: field.required,
+                                unique: field.unique,
+                            };
 
-                    fields_result.map((field) => {
-                        stuff[field.name] = {
-                            type: modelType(field.type),
-                            default: field.default,
-                            required: field.required,
-                            unique: field.unique,
-                        };
-                    });
+                            newData[field.name] = field.type === "string" ? `Test item for ${field.name}` : field.type === 'number' ? 1 : true;
+                        });
 
-                    const Schema = mongoose.Schema;
+                        const Schema = mongoose.Schema;
 
-                    const generatedModelSchema = new Schema(
-                        stuff,
-                        {
-                            timestamps: true,
-                        },
-                    );
+                        const generatedModelSchema = new Schema(
+                            stuff,
+                            {
+                                timestamps: true,
+                            },
+                        );
 
-                    const generatedModel = mongoose.model(form_result.name, generatedModelSchema);
+                        const generatedModel = mongoose.model(form_result.name, generatedModelSchema);
 
-                    res.status(200).send({message: "Done"});
+                        const insertData = new generatedModel(newData);
+
+                        insertData.save()
+                            .then((result) => res.status(200).send({message: "Model created"}))
+                            .catch((error) => res.status(500).send(error));
+                    } else {
+                        res.status(200).send({message: "Model exists"})
+                    }
                 })
                 .catch((error) => res.status(500).send(error));
         })
@@ -44,7 +54,9 @@ const test = (req, res) => {
 
 const insert = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
-    //
+
+    res.send({message: "hi"});
+
     // const data = req.body;
     // const testData = new Test(data);
     //
@@ -68,49 +80,13 @@ const insert = (req, res) => {
 const read = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
-    const {form_id} = req.param;
+    const {form_id} = req.params;
 
     Form.findById(form_id)
         .then((form_result) => {
-            Field.find({form: form_result._id})
-                .then((fields_result) => {
+            const model = mongoose.models['form'];
 
-                    let stuff = {};
-
-                    fields_result.map((field) => {
-                        stuff[field.name] = {
-                            type: modelType(field.type),
-                            default: field.default,
-                            required: field.required,
-                            unique: field.unique,
-                        };
-                    });
-
-                    const Schema = mongoose.Schema;
-
-                    const generatedModelSchema = new Schema(
-                        stuff,
-                        {
-                            timestamps: true,
-                        },
-                    );
-
-                    const generatedModel = mongoose.model(form_result.name, generatedModelSchema);
-
-
-                    generatedModel.find()
-                        .then((result) => {
-                            res.status(200).send(result);
-                        })
-                        .catch((error) => {
-                            const callback = {
-                                message: "Failed to get data",
-                                error,
-                            };
-                            res.status(500).send(callback);
-                        });
-                })
-                .catch((error) => res.status(500).send(error));
+            res.send({name});
         })
         .catch((error) => res.status(500).send(error));
 }
