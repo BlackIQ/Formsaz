@@ -36,7 +36,7 @@ const ShowPage = () => {
 
         console.log(data);
 
-        Axios.post(`${baseUrl}/api/test/insert`, sendData)
+        Axios.post(`${baseUrl}/api/data/insert`, sendData)
             .then((result) => {
                 console.log(result.data);
             })
@@ -58,13 +58,13 @@ const ShowPage = () => {
             })
             .catch((error) => console.log(error));
 
-        Axios.post(`${baseUrl}/api/test/test`, { form_id })
+        Axios.post(`${baseUrl}/api/data/init`, { form_id })
             .then((result) => {
                 console.log(result.data);
             })
             .catch((error) => console.log(error));
 
-        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
+        Axios.get(`${baseUrl}/api/data/read/${form_id}`)
             .then((result) => {
                 setDataMongo(result.data);
             })
