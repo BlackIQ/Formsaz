@@ -10,6 +10,8 @@ const {modelType} = require("../../hooks/model_creator");
 const test = (req, res) => {
     const {form_id} = req.body;
 
+    console.log(models);
+
     Form.findById(form_id)
         .then((form_result) => {
             Field.find({form: form_result._id})
@@ -57,37 +59,17 @@ const test = (req, res) => {
 const insert = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
-    res.send(req.params)
+    Form.findById(form_id)
+        .then((form_result) => {
+            const dynamicalModel = models[form_result.name];
 
+            const newRecord = new dynamicalModel(data);
 
-    // Form.findById(form_id)
-    //     .then((form_result) => {
-    //         const gModel = models[form_result.name];
-
-    //         console.log(gModel);
-
-    //         res.send({message: "Hi"})
-    //     })
-    //     .catch((error) => res.status(500).send(error));
-
-    // const data = req.body;
-    // const testData = new Test(data);
-    //
-    // testData.save()
-    //     .then((result) => {
-    //         const callback = {
-    //             message: "Data inserted",
-    //             result,
-    //         };
-    //         res.status(200).send(callback);
-    //     })
-    //     .catch((error) => {
-    //         const callback = {
-    //             message: "Data did not inserted",
-    //             error,
-    //         };
-    //         res.status(500).send(callback);
-    //     });
+            newRecord.save()
+                .then((result) => res.status(200).send({message: "Record inserted", result}))
+                .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
+        })
+        .catch((error) => res.status(500).send(error));
 }
 
 const read = (req, res) => {
@@ -95,11 +77,15 @@ const read = (req, res) => {
 
     const {form_id} = req.params;
 
+    console.log(models);
+
     Form.findById(form_id)
         .then((form_result) => {
-            console.log(models);
+            const dynamicalModel = models[form_result.name];
 
-            res.send(models);
+            dynamicalModel.find()
+                .then((result) => res.status(200).send(result))
+                .catch((error) => res.status(500).send({message: "Can not read", error}))
         })
         .catch((error) => res.status(500).send(error));
 }
