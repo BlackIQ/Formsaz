@@ -88,7 +88,7 @@ const ShowPage = () => {
                     fields !== ''
                     ?
                     fields.map((field) => (
-                        <Grid Key={field._id} md={3} xs={6} sm={6} item>
+                        <Grid key={field._id} md={3} xs={6} sm={6} item>
                             <CreateField field={field} register={register}/>
                         </Grid>
                     ))
@@ -134,7 +134,7 @@ const ShowPage = () => {
                                 <TableCell sx={{ fontWeight: "bold", color: "primary.main" }}>Row</TableCell>
                                 {
                                     fields.map((field) => (
-                                        <TableCell sx={{ fontWeight: "bold", color: "primary.main" }}>{ field.view }</TableCell>
+                                        <TableCell key={field} sx={{ fontWeight: "bold", color: "primary.main" }}>{ field.view }</TableCell>
                                     ))
                                 }
                             </TableRow>
@@ -143,7 +143,7 @@ const ShowPage = () => {
                             {
                                 dataMongo.map((data, index) => (
                                     <TableRow
-                                        key={data._id}
+                                        key={data}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
@@ -151,7 +151,7 @@ const ShowPage = () => {
                                         </TableCell>
                                         {
                                             fields.map((field) => (
-                                                <TableCell>{data[field.name]}</TableCell>
+                                                <TableCell key={field}>{data[field.name]}</TableCell>
                                             ))
                                         }
                                     </TableRow>
