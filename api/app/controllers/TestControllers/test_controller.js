@@ -10,8 +10,6 @@ const {modelType} = require("../../hooks/model_creator");
 const test = (req, res) => {
     const {form_id} = req.body;
 
-    console.log(models);
-
     Form.findById(form_id)
         .then((form_result) => {
             Field.find({form: form_result._id})
@@ -76,8 +74,6 @@ const read = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
     const {form_id} = req.params;
-
-    console.log(models);
 
     Form.findById(form_id)
         .then((form_result) => {
