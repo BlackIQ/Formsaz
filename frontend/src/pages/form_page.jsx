@@ -118,12 +118,6 @@ const FormPage = () => {
             .catch((error) => console.log(error));
     }
 
-    const deleteForm = () => {
-        Axios.delete(`${baseUrl}/api/form/delete/${form_id}`)
-            .then((result) => history.push("/"))
-            .catch((error) => console.log(error));
-    }
-
     const updateField = () => {
         const updateData = {
             field_id: updatingID,
@@ -187,24 +181,6 @@ const FormPage = () => {
                     disableElevation
                 >
                     Add a new field
-                </Button>
-                &nbsp;
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => setDeleteFormDialogOpen(true)}
-                    disableElevation
-                >
-                    Delete form
-                </Button>
-                &nbsp;
-                <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => history.push(`/show/${form_id}`)}
-                    disableElevation
-                >
-                    Show form
                 </Button>
             </Box>
             <br/>
@@ -343,31 +319,6 @@ const FormPage = () => {
                         disableElevation
                     >
                         {updatingField ? 'Update field' : 'Create field'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog
-                open={deleteFormDialogOpen}
-                onClose={() => setDeleteFormDialogOpen(false)}
-                maxWidth="xs"
-                fullWidth
-            >
-                <DialogTitle>
-                    <Typography variant="h6" color="error.main">Sure to delete?</Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Are sure that you want to delete this form? There is no way to restore form
-                        again.</DialogContentText>
-                </DialogContent>
-                <DialogActions sx={{p: 3}}>
-                    <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => deleteForm()}
-                        disableElevation
-                    >
-                        Delete form
                     </Button>
                 </DialogActions>
             </Dialog>
