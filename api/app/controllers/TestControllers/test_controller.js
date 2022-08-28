@@ -43,7 +43,11 @@ const test = (req, res) => {
                         const insertData = new generatedModel(newData);
 
                         insertData.save()
-                            .then((result) => res.status(200).send({message: "Model created"}))
+                            .then((result) => {
+                                generatedModel.findByIdAndDelete(result.id)
+                                    .then((done_result) => res.status(200).send({message: "Model created"}))
+                                    .catch((error) => res.status(500).send(error));
+                            })
                             .catch((error) => res.status(500).send(error));
                     } else {
                         res.status(200).send({message: "Model exists"})
