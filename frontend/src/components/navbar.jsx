@@ -147,8 +147,8 @@ const Navbar = () => {
                 maxWidth="xs"
                 fullWidth
             >
-                <DialogTitle>
-                    <Typography variant="h6" color="primary.main">Add new form</Typography>
+                <DialogTitle sx={{ color: "primary.main" }}>
+                    Create a new form
                 </DialogTitle>
                 <DialogContent>
                     <TextField
@@ -180,8 +180,8 @@ const Navbar = () => {
                 maxWidth="xs"
                 fullWidth
             >
-                <DialogTitle>
-                    <Typography variant="h6" color="primary.main">Add new field</Typography>
+                <DialogTitle sx={{ color: "primary.main" }}>
+                    Add a new field
                 </DialogTitle>
                 <DialogContent>
                     <br/>
