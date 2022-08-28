@@ -76,18 +76,28 @@ const deleteForm = (req, res) => {
 
     Form.findByIdAndDelete(form_id)
         .then((result) => {
-            const callback = {
-                message: "Form deleted",
-            };
-            res.status(200).send(callback);
+            Field.findOneAndDelete({ form: form_id })
+                .then((done_result) => {
+                    const callback = {
+                        message: "Form deleted",
+                    };
+                    res.status(200).send(callback);
+                })
+                .catch((error) => {
+                    const callback = {
+                        message: "Failed to delete form",
+                        error,
+                    };
+                    res.status(500).send(callback);
+                });
         })
         .catch((error) => {
             const callback = {
-                message: "Failed to delete",
+                message: "Failed to delete form",
                 error,
             };
             res.status(500).send(callback);
-        })
+        });
 }
 
 module.exports = {
