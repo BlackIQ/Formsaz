@@ -24,7 +24,7 @@ const modelType = (db_type) => {
     return data_type.filter(type => type.db_type === db_type)[0].model_type;
 }
 
-const test = (req, res) => {
+const init = (req, res) => {
     const {form_id} = req.body;
 
     Form.findById(form_id)
@@ -112,5 +112,5 @@ const read = (req, res) => {
 module.exports = {
     insert,
     read,
-    test,
+    init,
 }
