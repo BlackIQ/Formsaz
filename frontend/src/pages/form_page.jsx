@@ -63,7 +63,6 @@ const FormPage = () => {
     const [updatingID, setUpdatingID] = useState('');
 
     const [viewName, setViewName] = useState('');
-    const [databaseName, setDatabaseName] = useState('');
     const [defValue, setDefValue] = useState('');
     const [datatype, setDatatype] = useState('string');
     const [isRequired, setIsRequired] = useState(false);
@@ -74,7 +73,6 @@ const FormPage = () => {
 
     const readyToUpdate = (field) => {
         setViewName(field.view);
-        setDatabaseName(field.name);
         setDefValue(field.default);
         setDatatype(field.type);
         setIsRequired(field.required);
@@ -87,7 +85,6 @@ const FormPage = () => {
 
     const closeFieldDialog = () => {
         setViewName('');
-        setDatabaseName('');
         setDefValue('');
         setDatatype('string');
         setIsRequired(false);
@@ -99,8 +96,8 @@ const FormPage = () => {
 
     const addField = () => {
         const sendData = {
-            view: viewName,
-            name: databaseName,
+            view: viewName.charAt(0).toLocaleUpperCase() + viewName.slice(1),
+            name: viewName.toLowerCase() + '_item',
             type: datatype,
             required: isRequired,
             unique: isUnique,
@@ -111,7 +108,6 @@ const FormPage = () => {
         Axios.post(`${baseUrl}/api/field/create`, sendData)
             .then((result) => {
                 setViewName('');
-                setDatabaseName('');
                 setDefValue('');
                 setDatatype('string');
                 setIsRequired(false);
@@ -133,7 +129,6 @@ const FormPage = () => {
             field_id: updatingID,
             update_data: {
                 view: viewName,
-                name: databaseName,
                 type: datatype,
                 required: isRequired,
                 unique: isUnique,
@@ -145,7 +140,6 @@ const FormPage = () => {
         Axios.put(`${baseUrl}/api/field/update`, updateData)
             .then((result) => {
                 setViewName('');
-                setDatabaseName('');
                 setDefValue('');
                 setDatatype('string');
                 setIsRequired(false);
@@ -305,20 +299,10 @@ const FormPage = () => {
                     <TextField
                         variant="standard"
                         color="primary"
-                        label="View name"
-                        placeholder="Enter the name that is going to show in panel"
+                        label="Field name"
+                        placeholder="Enter the name that is going to call it"
                         value={viewName}
                         onChange={(e) => setViewName(e.target.value)}
-                        margin="dense"
-                        fullWidth
-                    />
-                    <TextField
-                        variant="standard"
-                        color="primary"
-                        label="Item name"
-                        placeholder="Enter the name that is going to be stored in database"
-                        value={databaseName}
-                        onChange={(e) => setDatabaseName(e.target.value)}
                         margin="dense"
                         fullWidth
                     />
