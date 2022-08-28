@@ -170,7 +170,8 @@ const FormPage = () => {
                 setFields(result.data.fields);
             })
             .catch((error) => console.log(error));
-    }, [form, form_id]);
+    }, []);
+
 
     return (
         <Box>
