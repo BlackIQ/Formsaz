@@ -70,6 +70,10 @@ const ShowPage = () => {
             .catch((error) => console.log(error));
     }, []);
 
+    console.log("render")
+
+
+    
     return (
         <Box>
             <Typography
