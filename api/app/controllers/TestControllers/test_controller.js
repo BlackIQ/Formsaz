@@ -57,6 +57,8 @@ const test = (req, res) => {
 const insert = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
+    const {form_id, data} = req.body;
+
     Form.findById(form_id)
         .then((form_result) => {
             const dynamicalModel = models[form_result.name];
