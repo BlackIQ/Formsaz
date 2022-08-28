@@ -5,7 +5,24 @@ const models = mongoose.models;
 const Form = require("../../models/form_model");
 const Field = require("../../models/field_model");
 
-const {modelType} = require("../../hooks/model_creator");
+const data_type = [
+    {
+        db_type: "string",
+        model_type: String,
+    },
+    {
+        db_type: "number",
+        model_type: Number,
+    },
+    {
+        db_type: "boolean",
+        model_type: Boolean,
+    },
+];
+
+const modelType = (db_type) => {
+    return data_type.filter(type => type.db_type === db_type)[0].model_type;
+}
 
 const test = (req, res) => {
     const {form_id} = req.body;
