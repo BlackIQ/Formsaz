@@ -49,8 +49,8 @@ const ShowPage = () => {
     const read = () => {
         Axios.get(`${baseUrl}/api/test/read/${form_id}`)
             .then((result) => {
-                // setDataMongo(result.data);
-                console.log(result.data);
+                setOkToRead(true);
+                setDataMongo(result.data);
             })
             .catch((error) => console.log(error));
     }
@@ -58,6 +58,7 @@ const ShowPage = () => {
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
+    const [okToRead, setOkToRead] = useState(false);
     const [dataMongo, setDataMongo] = useState('');
 
     useEffect(() => {
@@ -84,21 +85,21 @@ const ShowPage = () => {
             >
                 {
                     fields !== ''
-                        ?
-                        fields.map((field) => (
-                            <Grid Key={field._id} md={3} xs={6} sm={6} item>
-                                <CreateField field={field} register={register}/>
-                            </Grid>
-                        ))
-                        :
-                        <Box
-                            sx={{
-                                textAlign: "center",
-                                p: 5,
-                            }}
-                        >
-                            <CircularProgress/>
-                        </Box>
+                    ?
+                    fields.map((field) => (
+                        <Grid Key={field._id} md={3} xs={6} sm={6} item>
+                            <CreateField field={field} register={register}/>
+                        </Grid>
+                    ))
+                    :
+                    <Box
+                        sx={{
+                            textAlign: "center",
+                            p: 5,
+                        }}
+                    >
+                        <CircularProgress/>
+                    </Box>
                 }
             </Grid>
             <br/>
@@ -142,6 +143,26 @@ const ShowPage = () => {
             >
                 Show data
             </Typography>
+            {
+                okToRead
+                ?
+                dataMongo !== ''
+                ?
+                dataMongo.map((mognoData) => (
+                    <Typography>{ mognoData._id }</Typography>
+                ))
+                :
+                <Box
+                    sx={{
+                        textAlign: "center",
+                        p: 5,
+                    }}
+                >
+                    <CircularProgress/>
+                </Box>
+                :
+                <Typography>Not reading anything yet.</Typography>
+            }
         </Box>
     );
 }
