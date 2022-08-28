@@ -27,8 +27,6 @@ const ShowPage = () => {
             form_id,
         };
 
-        console.log(sendData);
-
         Axios.post(`${baseUrl}/api/test/insert`, sendData)
             .then((result) => {
                 console.log(result.data);
