@@ -26,7 +26,7 @@ const HomePage = () => {
         Axios.get(`${baseUrl}/api/form/all`)
             .then((result) => setForms(result.data))
             .catch((error) => console.log(error));
-    }, [forms]);
+    }, []);
 
     return (
         <Box>
