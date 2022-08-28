@@ -9,6 +9,13 @@ import {
     Divider,
     Button,
     CircularProgress,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    TableContainer,
+    Paper,
 } from "@mui/material";
 
 import Axios from "axios";
@@ -27,6 +34,8 @@ const ShowPage = () => {
             form_id,
         };
 
+        console.log(data);
+
         Axios.post(`${baseUrl}/api/test/insert`, sendData)
             .then((result) => {
                 console.log(result.data);
@@ -34,46 +43,34 @@ const ShowPage = () => {
             .catch((error) => console.log(error));
     }
 
-    const test = () => {
-        const data = {
-            form_id,
-        };
-
-        Axios.post(`${baseUrl}/api/test/test`, data)
-            .then((result) => {
-                console.log(result.data);
-            })
-            .catch((error) => console.log(error));
-    }
-
-    const read = () => {
-        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
-            .then((result) => {
-                setOkToRead(true);
-                setDataMongo(result.data);
-            })
-            .catch((error) => console.log(error));
-    }
-
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
-    const [okToRead, setOkToRead] = useState(false);
     const [dataMongo, setDataMongo] = useState('');
 
     useEffect(() => {
         Axios.get(`${baseUrl}/api/form/get/${form_id}`)
             .then((result) => {
-                setForm(result.data.form);
-                setFields(result.data.fields);
+                const { form, fields } = result.data;
+
+                setForm(form);
+                setFields(fields);
+            })
+            .catch((error) => console.log(error));
+
+        Axios.post(`${baseUrl}/api/test/test`, { form_id })
+            .then((result) => {
+                console.log(result.data);
+            })
+            .catch((error) => console.log(error));
+
+        Axios.get(`${baseUrl}/api/test/read/${form_id}`)
+            .then((result) => {
+                setDataMongo(result.data);
             })
             .catch((error) => console.log(error));
     }, []);
 
-    console.log("render")
-
-
-    
     return (
         <Box>
             <Typography
@@ -116,26 +113,6 @@ const ShowPage = () => {
             >
                 Insert
             </Button>
-            &nbsp;
-            <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={() => test()}
-                disableElevation
-            >
-                Test Exist ion
-            </Button>
-            &nbsp;
-            <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={() => read()}
-                disableElevation
-            >
-                Test Read
-            </Button>
             <br/>
             <br/>
             <Divider sx={{borderColor: "primary.main"}}/>
@@ -148,13 +125,41 @@ const ShowPage = () => {
                 Show data
             </Typography>
             {
-                okToRead
-                ?
                 dataMongo !== ''
                 ?
-                dataMongo.map((mognoData) => (
-                    <Typography>{ mognoData._id }</Typography>
-                ))
+                <TableContainer component={Paper} variant="outlined" sx={{ borderColor: "primary.main" }}>
+                    <Table sx={{ minWidth: 650 }}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: "bold", color: "primary.main" }}>Row</TableCell>
+                                {
+                                    fields.map((field) => (
+                                        <TableCell sx={{ fontWeight: "bold", color: "primary.main" }}>{ field.view }</TableCell>
+                                    ))
+                                }
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                dataMongo.map((data, index) => (
+                                    <TableRow
+                                        key={data._id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {index + 1}
+                                        </TableCell>
+                                        {
+                                            fields.map((field) => (
+                                                <TableCell>{data[field.name]}</TableCell>
+                                            ))
+                                        }
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
                 :
                 <Box
                     sx={{
@@ -164,8 +169,6 @@ const ShowPage = () => {
                 >
                     <CircularProgress/>
                 </Box>
-                :
-                <Typography>Not reading anything yet.</Typography>
             }
         </Box>
     );
