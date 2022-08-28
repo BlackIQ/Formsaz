@@ -4,7 +4,7 @@ const controllers = require("../../controllers/DynamicDataControllers/dynamic_da
 
 const router = express.Router();
 
-router.post('/test', controllers.test);
+router.post('/init', controllers.init);
 router.get('/read/:form_id', controllers.read);
 router.post('/insert', controllers.insert);
 
