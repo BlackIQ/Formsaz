@@ -30,7 +30,7 @@ const Navbar = () => {
     const createForm = () => {
         const sendData = {
             view: viewName.charAt(0).toLocaleUpperCase() + viewName.slice(1),
-            name: `${viewName.toLowerCase()}_db`,
+            name: viewName.toLowerCase() + '_db',
         };
 
         Axios.post(`${baseUrl}/api/form/create`, sendData)
