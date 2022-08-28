@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+const models = mongoose.models;
+const names = mongoose.modelNames();
+
 const Form = require("../../models/form_model");
 const Field = require("../../models/field_model");
 
@@ -12,7 +15,7 @@ const test = (req, res) => {
         .then((form_result) => {
             Field.find({form: form_result._id})
                 .then((fields_result) => {
-                    if (!mongoose.models[form_result.name]) {
+                    if (!models[form_result.name]) {
                         let stuff = {};
                         let newData = {};
 
@@ -84,9 +87,10 @@ const read = (req, res) => {
 
     Form.findById(form_id)
         .then((form_result) => {
-            const model = mongoose.models['form'];
+            console.log(models);
+            console.log(names)
 
-            res.send({name});
+            res.send({name: "Amir"});
         })
         .catch((error) => res.status(500).send(error));
 }
