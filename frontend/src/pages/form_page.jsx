@@ -5,21 +5,12 @@ import {
     Box,
     Grid,
     Typography,
-    Card,
-    CardHeader,
-    CardContent,
     Divider,
-    Button,
-    IconButton,
     CircularProgress,
-    Avatar,
 } from "@mui/material";
 
-import {
-    Delete,
-} from "@mui/icons-material";
-
 import Axios from "axios";
+import ShowFieldItem from "../components/show_field";
 
 const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -78,35 +69,7 @@ const FormPage = () => {
                         :
                         fields.map((field) => (
                             <Grid key={field} md={4} sm={6} xs={6} item>
-                                <Card variant="outlined">
-                                    <CardHeader
-                                        title={field.view}
-                                        subheader={field.name}
-                                        avatar={
-                                            <Avatar
-                                                sx={{bgcolor: "primary.main"}}>{field.type[0].toUpperCase()}
-                                            </Avatar>
-                                        }
-                                        action={
-                                            <IconButton onClick={() => deleteField(field._id)}>
-                                                <Delete color="error"/>
-                                            </IconButton>
-                                        }
-                                        sx={{borderBottom: "solid 1px", borderBottomColor: "divider"}}
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom>
-                                            {field.unique ? "✅" : "❌"}
-                                            &nbsp;
-                                            Unique
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                            {field.required ? "✅" : "❌"}
-                                            &nbsp;
-                                            Required
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
+                                <ShowFieldItem field={field} FieldDelete={() => deleteField(field._id)} />
                             </Grid>
                         ))
                 }
