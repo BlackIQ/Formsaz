@@ -26,12 +26,11 @@ const Navbar = () => {
     const [addFormDialogOpen, setAddFormDialogOpen] = useState(false);
 
     const [viewName, setViewName] = useState('');
-    const [databaseName, setDatabaseName] = useState('');
 
     const createForm = () => {
         const sendData = {
-            view: viewName,
-            name: databaseName,
+            view: viewName.charAt(0).toLocaleUpperCase() + viewName.slice(1),
+            name: `${viewName.toLowerCase()}_db`,
         };
 
         Axios.post(`${baseUrl}/api/form/create`, sendData)
@@ -39,7 +38,6 @@ const Navbar = () => {
                 const form_id = result.data.form._id;
 
                 setViewName('');
-                setDatabaseName('');
                 setAddFormDialogOpen(false);
 
                 history.push(`/form/${form_id}`);
@@ -89,20 +87,10 @@ const Navbar = () => {
                     <TextField
                         variant="standard"
                         color="primary"
-                        label="View name"
-                        placeholder="Enter the name that is going to show in panel"
+                        label="Name"
+                        placeholder="Enter the form name"
                         value={viewName}
                         onChange={(e) => setViewName(e.target.value)}
-                        margin="dense"
-                        fullWidth
-                    />
-                    <TextField
-                        variant="standard"
-                        color="primary"
-                        label="Database name"
-                        placeholder="Enter the name that the form is going to be save in DB"
-                        value={databaseName}
-                        onChange={(e) => setDatabaseName(e.target.value)}
                         margin="dense"
                         fullWidth
                     />
