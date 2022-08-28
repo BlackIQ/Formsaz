@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const models = mongoose.models;
-const names = mongoose.modelNames();
 
 const Form = require("../../models/form_model");
 const Field = require("../../models/field_model");
@@ -58,7 +57,18 @@ const test = (req, res) => {
 const insert = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
-    res.send({message: "hi"});
+    res.send(req.params)
+
+
+    // Form.findById(form_id)
+    //     .then((form_result) => {
+    //         const gModel = models[form_result.name];
+
+    //         console.log(gModel);
+
+    //         res.send({message: "Hi"})
+    //     })
+    //     .catch((error) => res.status(500).send(error));
 
     // const data = req.body;
     // const testData = new Test(data);
@@ -88,9 +98,8 @@ const read = (req, res) => {
     Form.findById(form_id)
         .then((form_result) => {
             console.log(models);
-            console.log(names)
 
-            res.send({name: "Amir"});
+            res.send(models);
         })
         .catch((error) => res.status(500).send(error));
 }
