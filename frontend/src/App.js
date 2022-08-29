@@ -1,8 +1,9 @@
+import {useState} from "react";
+
 import {
     ThemeProvider,
     createTheme,
     CssBaseline,
-    colors as Colors,
     Container,
 } from "@mui/material";
 
@@ -19,12 +20,24 @@ import FormPage from "./pages/form_page";
 import ShowPage from "./pages/show_page";
 
 function App() {
+    const [mode, setMode] = useState("light");
+
+    const changeTheme = () => {
+        setMode(mode === "light" ? "dark" : "light");
+    }
+
     const theme = createTheme({
         palette: {
-            mode: "light",
-            primary: {
-                main: Colors.indigo[900],
+            mode,
+            background: {
+                default: mode === "dark" ? "#121212" : "#ffffff",
             },
+            primary: {
+                main: mode === "dark" ? "#bb86fc" : "#6200ee",
+            },
+            secondary: {
+                main: mode === "dark" ? "#03dac6" : "#03dac6",
+            }
         },
     });
 
@@ -32,7 +45,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Router>
-                <Navbar />
+                <Navbar mode={mode} changeMode={changeTheme} />
                 <Container
                     sx={{
                         py: 2
