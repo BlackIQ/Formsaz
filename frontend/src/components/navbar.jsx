@@ -193,9 +193,9 @@ const Navbar = (props) => {
                             onChange={(e) => setDatatype(e.target.value)}
                         >
                             {
-                                datatypes.map((datat) => (
+                                datatypes.map((datat, index) => (
                                     <MenuItem
-                                        key={datat}
+                                        key={datat + index}
                                         value={datat.value}
                                     >
                                         {datat.title}
