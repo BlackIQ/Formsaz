@@ -26,6 +26,7 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL;
 const ShowPage = () => {
     const {form_id} = useParams();
 
+    // eslint-disable-next-line
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
 
     const submit = (data) => {
@@ -34,8 +35,6 @@ const ShowPage = () => {
             form_id,
         };
 
-        console.log(data);
-
         Axios.post(`${baseUrl}/api/data/insert`, sendData)
             .then((result) => {
                 console.log(result.data);
@@ -43,6 +42,7 @@ const ShowPage = () => {
             .catch((error) => console.log(error));
     }
 
+    // eslint-disable-next-line
     const [form, setForm] = useState('');
     const [fields, setFields] = useState('');
 
@@ -69,7 +69,7 @@ const ShowPage = () => {
                 setDataMongo(result.data);
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [form_id]);
 
     return (
         <Box>
@@ -134,7 +134,7 @@ const ShowPage = () => {
                                 <TableCell sx={{ fontWeight: "bold", color: "primary.main" }}>Row</TableCell>
                                 {
                                     fields.map((field) => (
-                                        <TableCell key={field} sx={{ fontWeight: "bold", color: "primary.main" }}>{ field.view }</TableCell>
+                                        <TableCell key={field._id} sx={{ fontWeight: "bold", color: "primary.main" }}>{ field.view }</TableCell>
                                     ))
                                 }
                             </TableRow>
@@ -143,7 +143,7 @@ const ShowPage = () => {
                             {
                                 dataMongo.map((data, index) => (
                                     <TableRow
-                                        key={data}
+                                        key={data._id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
@@ -151,7 +151,7 @@ const ShowPage = () => {
                                         </TableCell>
                                         {
                                             fields.map((field) => (
-                                                <TableCell key={field}>{data[field.name]}</TableCell>
+                                                <TableCell key={field._id}>{data[field.name]}</TableCell>
                                             ))
                                         }
                                     </TableRow>
