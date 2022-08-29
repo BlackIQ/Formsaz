@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import {useForm} from "react-hook-form";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
 import {
     Box,
@@ -24,6 +24,7 @@ import CreateField from "../components/field_creator";
 const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 const ShowPage = () => {
+    const history = useHistory();
     const {form_id} = useParams();
 
     // eslint-disable-next-line
@@ -35,10 +36,10 @@ const ShowPage = () => {
             form_id,
         };
 
+        const dev = true;
+
         Axios.post(`${baseUrl}/api/data/insert`, sendData)
-            .then((result) => {
-                console.log(result.data);
-            })
+            .then((result) => dev ? console.log(result.data) : history.go(0))
             .catch((error) => console.log(error));
     }
 
