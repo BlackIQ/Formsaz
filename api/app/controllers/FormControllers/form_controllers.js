@@ -9,32 +9,16 @@ const createForm = (req, res) => {
     const newForm = new Form(form_data);
 
     newForm.save()
-        .then((result) => {
-            const callback = {
-                message: "Form created",
-                form: result,
-            };
-            res.status(200).send(callback);
-        })
-        .catch((error) => {
-            res.status(500).send(error);
-        });
+        .then((result) => res.status(200).send({message: "Form created", form: result}))
+        .catch((error) => res.status(500).send({message: "Faild to save form", error}));
 }
 
 const allForms = (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
 
     Form.find()
-        .then((forms) => {
-            res.status(200).send(forms);
-        })
-        .catch((error) => {
-            const callback = {
-                message: "Error to fetch forms",
-                error
-            };
-            res.status(200).send(callback);
-        });
+        .then((forms) => res.status(200).send(forms))
+        .catch((error) => res.status(200).send({message: "Error to fetch forms", error}));
 }
 
 const showForm = (req, res) => {
@@ -59,27 +43,10 @@ const deleteForm = (req, res) => {
     Form.findByIdAndDelete(form_id)
         .then((result) => {
             Field.deleteMany({ form: form_id })
-                .then((done_result) => {
-                    const callback = {
-                        message: "Form deleted",
-                    };
-                    res.status(200).send(callback);
-                })
-                .catch((error) => {
-                    const callback = {
-                        message: "Failed to delete form",
-                        error,
-                    };
-                    res.status(500).send(callback);
-                });
+                .then((done_result) => res.status(200).send({message: "Form deleted"}))
+                .catch((error) => res.status(500).send({message: "Failed to delete form", error}));
         })
-        .catch((error) => {
-            const callback = {
-                message: "Failed to delete form",
-                error,
-            };
-            res.status(500).send(callback);
-        });
+        .catch((error) => res.status(500).send({message: "Failed to delete form", error}));
 }
 
 module.exports = {
