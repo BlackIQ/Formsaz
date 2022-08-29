@@ -34,7 +34,7 @@ const FormPage = () => {
                 setFields(result.data.fields);
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [form_id]);
 
 
     return (
@@ -68,7 +68,7 @@ const FormPage = () => {
                         </Box>
                         :
                         fields.map((field) => (
-                            <Grid key={field} md={4} sm={6} xs={6} item>
+                            <Grid key={field._id} md={4} sm={6} xs={6} item>
                                 <ShowFieldItem field={field} FieldDelete={() => deleteField(field._id)} />
                             </Grid>
                         ))
