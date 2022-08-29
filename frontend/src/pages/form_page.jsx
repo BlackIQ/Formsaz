@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
 import {
     Box,
@@ -15,6 +15,7 @@ import ShowFieldItem from "../components/show_field";
 const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 const FormPage = () => {
+    const history = useHistory();
     const {form_id} = useParams();
 
     const [form, setForm] = useState('');
@@ -22,8 +23,7 @@ const FormPage = () => {
 
     const deleteField = (field_id) => {
         Axios.delete(`${baseUrl}/api/field/delete/${field_id}`)
-            .then((result) => {
-            })
+            .then((result) => history.go(0))
             .catch((error) => console.log(error));
     }
 
