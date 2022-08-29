@@ -20,7 +20,13 @@ import {
     MenuItem,
     FormControl,
     Select,
+    IconButton,
 } from "@mui/material";
+
+import {
+    LightMode,
+    DarkMode,
+} from "@mui/icons-material";
 
 import Axios from "axios";
 
@@ -41,7 +47,9 @@ const datatypes = [
     }
 ];
 
-const Navbar = () => {
+const Navbar = (props) => {
+    const { mode, changeMode } = props;
+
     const history = useHistory();
     const location = useLocation();
 
@@ -82,7 +90,10 @@ const Navbar = () => {
         };
 
         Axios.post(`${baseUrl}/api/form/create`, sendData)
-            .then((result) => history.push(`/form/${form_id}`))
+            .then((result) => {
+                setAddFormDialogOpen(false);
+                history.push(`/form/${result.data.form._id}`);
+            })
             .catch((error) => {
                 console.log(error);
             });
@@ -121,6 +132,9 @@ const Navbar = () => {
                                 Add a new field
                             </Button>
                         }
+                        <IconButton color="inherit" onClick={changeMode}>
+                            { mode === "light" ? <LightMode /> : <DarkMode /> }
+                        </IconButton>
                     </Toolbar>
                 </Container>
             </AppBar>
