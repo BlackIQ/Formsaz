@@ -76,7 +76,7 @@ const deleteForm = (req, res) => {
 
     Form.findByIdAndDelete(form_id)
         .then((result) => {
-            Field.findOneAndDelete({ form: form_id })
+            Field.deleteMany({ form: form_id })
                 .then((done_result) => {
                     const callback = {
                         message: "Form deleted",
