@@ -29,7 +29,7 @@ const HomePage = () => {
 
     const deleteForm = (form_id) => {
         Axios.delete(`${baseUrl}/api/form/delete/${form_id}`)
-            .then((result) => history.push("/"))
+            .then((result) => history.go(0))
             .catch((error) => console.log(error));
     }
 
@@ -67,7 +67,7 @@ const HomePage = () => {
                                     
                                 >
                                     <ListItemIcon>
-                                        <Folder color="primary" fontSize="large" />
+                                        <Folder color="secondary" fontSize="large" />
                                     </ListItemIcon>
                                     <ListItemText primary={form.view} />
                                 </ListItem>
