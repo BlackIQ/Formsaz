@@ -82,7 +82,14 @@ const insert = (req, res) => {
         .then((form_result) => {
             Field.find({form: form_result._id})
                 .then((fields_result) => {
-                    let hasError = false;
+                        // const dynamicalModel = models[form_result.name];
+                        // const newRecord = new dynamicalModel(data);
+
+                        // newRecord.save()
+                        //     .then((result) => res.status(200).send({message: "Record inserted", result}))
+                        //     .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
+
+                    const errors = [];
 
                     fields_result.map((field) => {
                         const db_item = field.name;
@@ -91,8 +98,12 @@ const insert = (req, res) => {
                             if (db_item === k) {
                                 if (field.required === true) {
                                     if (v === '') {
-                                        hasError = true;
-                                        res.send({message: `${field.view} is required`});
+                                        errors.push(
+                                            {
+                                                field: field.view,
+                                                content: `${field.view} is required.`
+                                            }
+                                        );
                                     }
                                 }
                                 
@@ -100,8 +111,12 @@ const insert = (req, res) => {
                                     Field.find({ db_item: v })
                                         .then((result) => {
                                             if (result.length === 0) {
-                                                hasError = true;
-                                                res.send({message: `${field.view} is unique`});
+                                                errors.push(
+                                                    {
+                                                        field: field.view,
+                                                        content: `${field.view} is unique.`
+                                                    }
+                                                );
                                             }
                                         })
                                         .catch((error) => res.send(error));
@@ -110,20 +125,16 @@ const insert = (req, res) => {
                         });
                     })
 
-                    res.send({message: "No errors"});
+                    if (errors.length === 0) {
+                        const dynamicalModel = models[form_result.name];
+                        const newRecord = new dynamicalModel(data);
 
-                    // if (!hasError) res.send({message: "It has no error"});
-                    // else res.send({message: "It has error"});
+                        newRecord.save()
+                            .then((result) => res.status(200).send({message: "Record inserted", result}))
+                            .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
+                    } else res.send(errors);
                 })
                 .catch((error) => res.status(500).send({message: "Faild get fields result", error}));
-
-            // const dynamicalModel = models[form_result.name];
-
-            // const newRecord = new dynamicalModel(data);
-
-            // newRecord.save()
-            //     .then((result) => res.status(200).send({message: "Record inserted", result}))
-            //     .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
         })
         .catch((error) => res.status(500).send({message: "Faild get form result", error}));
 }
