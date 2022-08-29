@@ -45,28 +45,10 @@ const showForm = (req, res) => {
     Form.findById(form_id)
         .then((formResult) => {
             Field.find({ form: form_id })
-                .then((fieldResult) => {
-                    const callback = {
-                        form: formResult,
-                        fields: fieldResult,
-                    };
-                    res.status(200).send(callback);
-                })
-                .catch((error) => {
-                    const callback = {
-                        message: "Error in fetch field",
-                        error,
-                    };
-                    res.status(500).send(callback);
-                });
+                .then((fieldResult) => res.status(200).send({form: formResult, fields: fieldResult}))
+                .catch((error) => res.status(500).send({message: "Error in fetch field", error}));
         })
-        .catch((error) => {
-            const callback = {
-                message: "Error in fetch form",
-                error,
-            };
-            res.status(500).send(callback);
-        });
+        .catch((error) => res.status(500).send({message: "Error in fetch form", error}));
 }
 
 const deleteForm = (req, res) => {
