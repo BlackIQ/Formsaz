@@ -7,6 +7,5 @@ const router = express.Router();
 router.post('/create', controllers.createField);
 router.put('/update', controllers.updateField);
 router.delete('/delete/:field_id', controllers.deleteField);
-router.get('/test', controllers.testModel);
 
 module.exports = router;
