@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const models = mongoose.models;
-
 const Form = require("../../models/form_model");
 const Field = require("../../models/field_model");
+
+const models = mongoose.models;
 
 const data_type = [
     {
@@ -63,16 +63,14 @@ const init = (req, res) => {
                             .then((result) => {
                                 generatedModel.findByIdAndDelete(result.id)
                                     .then((done_result) => res.status(200).send({message: "Model created"}))
-                                    .catch((error) => res.status(500).send(error));
+                                    .catch((error) => res.status(500).send({message: "Faild create model", error}));
                             })
-                            .catch((error) => res.status(500).send(error));
-                    } else {
-                        res.status(200).send({message: "Model exists"})
-                    }
+                            .catch((error) => res.status(500).send({message: "Faild to insert data", error}));
+                    } else res.status(200).send({message: "Model exists"});
                 })
-                .catch((error) => res.status(500).send(error));
+                .catch((error) => res.status(500).send({message: "Faild get fields result", error}));
         })
-        .catch((error) => res.status(500).send(error));
+        .catch((error) => res.status(500).send({message: "Faild get form result", error}));
 }
 
 const insert = (req, res) => {
@@ -82,15 +80,52 @@ const insert = (req, res) => {
 
     Form.findById(form_id)
         .then((form_result) => {
-            const dynamicalModel = models[form_result.name];
+            Field.find({form: form_result._id})
+                .then((fields_result) => {
+                    let hasError = false;
 
-            const newRecord = new dynamicalModel(data);
+                    fields_result.map((field) => {
+                        const db_item = field.name;
 
-            newRecord.save()
-                .then((result) => res.status(200).send({message: "Record inserted", result}))
-                .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
+                        Object.entries(data).map(([k,v]) => {
+                            if (db_item === k) {
+                                if (field.required === true) {
+                                    if (v === '') {
+                                        hasError = true;
+                                        res.send({message: `${field.view} is required`});
+                                    }
+                                }
+                                
+                                if (field.unique === true) {
+                                    Field.find({ db_item: v })
+                                        .then((result) => {
+                                            if (result.length === 0) {
+                                                hasError = true;
+                                                res.send({message: `${field.view} is unique`});
+                                            }
+                                        })
+                                        .catch((error) => res.send(error));
+                                }
+                            };
+                        });
+                    })
+
+                    res.send({message: "No errors"});
+
+                    // if (!hasError) res.send({message: "It has no error"});
+                    // else res.send({message: "It has error"});
+                })
+                .catch((error) => res.status(500).send({message: "Faild get fields result", error}));
+
+            // const dynamicalModel = models[form_result.name];
+
+            // const newRecord = new dynamicalModel(data);
+
+            // newRecord.save()
+            //     .then((result) => res.status(200).send({message: "Record inserted", result}))
+            //     .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
         })
-        .catch((error) => res.status(500).send(error));
+        .catch((error) => res.status(500).send({message: "Faild get form result", error}));
 }
 
 const read = (req, res) => {
@@ -106,7 +141,7 @@ const read = (req, res) => {
                 .then((result) => res.status(200).send(result))
                 .catch((error) => res.status(500).send({message: "Can not read", error}))
         })
-        .catch((error) => res.status(500).send(error));
+        .catch((error) => res.status(500).send({message: "Faild get form result", error}));
 }
 
 module.exports = {
