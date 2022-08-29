@@ -28,7 +28,9 @@ const ShowPage = () => {
     const {form_id} = useParams();
 
     // eslint-disable-next-line
-    const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+        criteriaMode: 'all',
+    });
 
     const submit = (data) => {
         const sendData = {
@@ -36,11 +38,15 @@ const ShowPage = () => {
             form_id,
         };
 
-        const dev = true;
-
         Axios.post(`${baseUrl}/api/data/insert`, sendData)
-            .then((result) => dev ? console.log(result.data) : history.go(0))
-            .catch((error) => console.log(error));
+            .then((result) => history.go(0))
+            .catch((error) => {
+                if (error.response.status === 400) {
+                    const errors = error.response.data;
+
+                    errors.map((error) => setError(error.field, { "error": error.content }))
+                }
+            });
     }
 
     // eslint-disable-next-line
@@ -66,9 +72,7 @@ const ShowPage = () => {
             .catch((error) => console.log(error));
 
         Axios.get(`${baseUrl}/api/data/read/${form_id}`)
-            .then((result) => {
-                setDataMongo(result.data);
-            })
+            .then((result) => setDataMongo(result.data))
             .catch((error) => console.log(error));
     }, [form_id]);
 
@@ -90,7 +94,7 @@ const ShowPage = () => {
                     ?
                     fields.map((field) => (
                         <Grid key={field._id} md={3} xs={6} sm={6} item>
-                            <CreateField field={field} register={register}/>
+                            <CreateField field={field} register={register} errors={errors} />
                         </Grid>
                     ))
                     :
@@ -152,7 +156,7 @@ const ShowPage = () => {
                                         </TableCell>
                                         {
                                             fields.map((field) => (
-                                                <TableCell key={field._id}>{data[field.name]}</TableCell>
+                                                <TableCell key={field._id}>{String(data[field.name])}</TableCell>
                                             ))
                                         }
                                     </TableRow>

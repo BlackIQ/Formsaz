@@ -48,7 +48,7 @@ const HomePage = () => {
                         {
                             forms.map((form) => (
                                 <ListItem
-                                    key={form}
+                                    key={form._id}
                                     secondaryAction={
                                         <Box>
                                             <IconButton onClick={() => deleteForm(form._id)}>
