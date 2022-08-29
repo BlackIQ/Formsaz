@@ -82,13 +82,6 @@ const insert = (req, res) => {
         .then((form_result) => {
             Field.find({form: form_result._id})
                 .then((fields_result) => {
-                        // const dynamicalModel = models[form_result.name];
-                        // const newRecord = new dynamicalModel(data);
-
-                        // newRecord.save()
-                        //     .then((result) => res.status(200).send({message: "Record inserted", result}))
-                        //     .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
-
                     const errors = [];
 
                     fields_result.map((field) => {
@@ -100,7 +93,7 @@ const insert = (req, res) => {
                                     if (v === '') {
                                         errors.push(
                                             {
-                                                field: field.view,
+                                                field: field.name,
                                                 content: `${field.view} is required.`
                                             }
                                         );
@@ -113,13 +106,13 @@ const insert = (req, res) => {
                                             if (result.length === 0) {
                                                 errors.push(
                                                     {
-                                                        field: field.view,
+                                                        field: field.name,
                                                         content: `${field.view} is unique.`
                                                     }
                                                 );
                                             }
                                         })
-                                        .catch((error) => res.send(error));
+                                        .catch((error) => res.send({message: "Faild to get data from dynamic model", error}));
                                 }
                             };
                         });
@@ -132,7 +125,7 @@ const insert = (req, res) => {
                         newRecord.save()
                             .then((result) => res.status(200).send({message: "Record inserted", result}))
                             .catch((error) => res.status(500).send({message: "Record did not inserted", error}));
-                    } else res.send(errors);
+                    } else res.status(400).send(errors);
                 })
                 .catch((error) => res.status(500).send({message: "Faild get fields result", error}));
         })
