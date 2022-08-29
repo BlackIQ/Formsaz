@@ -69,15 +69,7 @@ const Navbar = () => {
         };
 
         Axios.post(`${baseUrl}/api/field/create`, sendData)
-            .then((result) => {
-                setFormViewName('');
-                setDefValue('');
-                setDatatype('string');
-                setIsRequired(false);
-                setIsUnique(false);
-
-                setFieldDialog(false);
-            })
+            .then((result) => history.go(0))
             .catch((error) => console.log(error));
     }
 
@@ -90,14 +82,7 @@ const Navbar = () => {
         };
 
         Axios.post(`${baseUrl}/api/form/create`, sendData)
-            .then((result) => {
-                const form_id = result.data.form._id;
-
-                setFormViewName('');
-                setAddFormDialogOpen(false);
-
-                history.push(`/form/${form_id}`);
-            })
+            .then((result) => history.push(`/form/${form_id}`))
             .catch((error) => {
                 console.log(error);
             });
