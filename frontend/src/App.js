@@ -42,6 +42,9 @@ function App() {
                 main: mode === "dark" ? "#03dac6" : "#03dac6",
             }
         },
+        typography: {
+            fontFamily: "Quicksand",
+        },
     });
 
     return (
@@ -51,7 +54,7 @@ function App() {
                 <Navbar mode={mode} changeMode={changeTheme} />
                 <Container
                     sx={{
-                        py: 2
+                        py: 2,
                     }}
                 >
                     <Switch>
