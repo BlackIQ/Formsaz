@@ -150,7 +150,7 @@ const Navbar = () => {
                 <DialogActions sx={{ p: 3 }}>
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         onClick={() => createForm()}
                         disableElevation
                     >
@@ -232,7 +232,7 @@ const Navbar = () => {
                 <DialogActions sx={{p: 3}}>
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         onClick={() => addField()}
                         disableElevation
                     >

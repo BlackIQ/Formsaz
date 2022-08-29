@@ -107,7 +107,7 @@ const ShowPage = () => {
             <br/>
             <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 size="large"
                 onClick={handleSubmit(submit)}
                 disableElevation
