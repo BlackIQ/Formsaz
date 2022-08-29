@@ -19,10 +19,13 @@ import HomePage from "./pages/home_page";
 import FormPage from "./pages/form_page";
 import ShowPage from "./pages/show_page";
 
+const lc = localStorage;
+
 function App() {
-    const [mode, setMode] = useState("light");
+    const [mode, setMode] = useState(lc.getItem("theme"));
 
     const changeTheme = () => {
+        lc.setItem("theme", mode === "light" ? "dark" : "light");
         setMode(mode === "light" ? "dark" : "light");
     }
 
